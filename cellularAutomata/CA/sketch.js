@@ -1,6 +1,12 @@
 var cellWidth = 0, rows = 0, cols = 0, cells = [], prevRow = []
 function setup() {
-	createCanvas(window.innerWidth, window.innerHeight)
+	createCanvas(window.innerWidth, window.innerHeight)	
+	fill(0,100,100)
+	//noFill()
+	//stroke(0,25)
+	//fill(0,1)
+	noStroke()
+	
 	cellWidth = getCellW(width, height)
 	rows = round(height/cellWidth)
 	cols = round(width/cellWidth)
@@ -24,10 +30,11 @@ function initiateCells(r){
 			rc = getCell(c)
 		}
 		colAtR[c] = rc
-		var rh = r*cellWidth			
-		fill(255-rc*155)
-		stroke((1-rc)*255)
-		rect(c*cellWidth,rh,cellWidth,cellWidth)
+		var rh = r*cellWidth
+		if(rc){
+			//ellipse(c*cellWidth,rh,50*cellWidth)
+			rect(c*cellWidth,rh,cellWidth,cellWidth)
+		}
 	}
 	prevRow = colAtR
 }

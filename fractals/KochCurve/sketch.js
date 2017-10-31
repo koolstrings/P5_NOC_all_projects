@@ -3,7 +3,8 @@ var len, kochLinesArray = [];
 function setup() {
 	createCanvas(window.innerWidth, window.innerHeight);
 	len  = width;
-	kochLinesArray.push(new KochLine(createVector(0,200), createVector(width,200)))
+	kochLinesArray.push(new KochLine(createVector(200,2*height/3), createVector(width-200,2*height/3)))
+	showAll()
 }
 
 function KochLine(start, end, col){
@@ -22,23 +23,24 @@ KochLine.prototype = {
 function createKochLines(){
 	var nextKochLinesArray = [],
 		lineLength = p5.Vector.dist(kochLinesArray[0].start, kochLinesArray[0].end)
-	if(lineLength > width/50){	
+	if(lineLength > 1){	
 		for(var i = 0; i< kochLinesArray.length; i++){
 			var kl = kochLinesArray[i],
 				s = kl.start.copy(),
-				e = kl.end,
-				bk1 = createVector((s.x+e.x)/3, (s.y+e.y)/3),	
-				trianglePt = createVector((s.x+e.x)/2, (s.y+e.y)/2)
-				bk2 = createVector(2*(s.x+e.x)/3, 2*(s.y+e.y)/3);
+				e = kl.end;
+			var newLineMag = lineLength/3;
+			var bk1 = e.copy().sub(s).div(3).setMag(newLineMag).add(s);
+			var trianglePt = e.copy().sub(s).div(3).rotate(-PI/3).setMag(newLineMag).add(bk1);
+			var bk2 = e.copy().sub(s).div(3).setMag(newLineMag*2).add(s);
 				
 				//START POINT
-				nextKochLinesArray.push(new KochLine(s, bk1))
+				nextKochLinesArray.push(new KochLine(s, bk1,'green'))
 				//NEXT POINT
-				trianglePt.sub(s).rotate(radians(60))
+				//trianglePt.sub(s).rotate(radians(60))
 				
 				nextKochLinesArray.push(new KochLine(bk1, trianglePt, 'red'))
-				nextKochLinesArray.push(new KochLine(trianglePt, bk2))
-				nextKochLinesArray.push(new KochLine(bk2, e))
+				nextKochLinesArray.push(new KochLine(trianglePt, bk2, 'red'))
+				nextKochLinesArray.push(new KochLine(bk2, e, 'green'))
 		}
 		kochLinesArray = nextKochLinesArray	
 	}

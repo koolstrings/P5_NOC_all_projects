@@ -7,11 +7,11 @@ function setup() {
 	mousePos = createVector(mouseX, mouseY)
 	wh = width*height
 	noStroke()
-	fill(150,0,0)//,100,0)
+	fill(100)
 }
 
 function draw() {	
-	background(150)
+	background(220,255,255)
 	mousePos.x = mouseX
 	mousePos.y = mouseY
 	for(var i = 0; i<len; i++){
@@ -26,12 +26,13 @@ function Bird(){
 	this.vel = createVector(random(-1,1), random(-1,1))
 	this.acc = createVector()
 	this.target = createVector()
+	//this.col = {r: random(0,55),g: random(0,55),b: random(0,55)}
 }
 
 Bird.prototype = {
 	update: function(i){
 		this.applyBehaviors(i)
-		this.vel.limit(.7)
+		this.vel.limit(.9)
 		this.vel.add(this.acc)
 		this.loc.add(this.vel)
 		this.acc.mult(0)
@@ -42,25 +43,34 @@ Bird.prototype = {
 			
 			v = round(loc.y*vel.y+loc.x*vel.x)
 			
-		var flap = map(v%25, -25, 25, -PI, PI)
+		var flap = map(v%25, -25, 25, -2*PI, 2*PI)
 		//ellipse(loc.x,loc.y,rad)
 		
 		push()
+		
 		var vr = vel.x*vel.y
 		var ro = map(vr,-.5,.5,.3,1)
 		var r = rad*ro
 		translate(loc.x,loc.y)
+		/*
 		rotate(-vr)
+		*/
+		rotate(vel.heading()+PI/2)
 		push()
+		/*
+		//fill(255,100,100)
 		if(vel.y>0){
 			ellipse(0,-r/4,r/2,r/2)
 		}else{
 			ellipse(0,r/4,r/2,r/2)
 		}
-		rotate(flap*2)
-		ellipse(r/2,0,r*3/2,r/2)
-		rotate(flap*-4)
-		ellipse(-r/2,0,r*3/2,r/2)
+		//fill(this.col.r, this.col.g, this.col.b)
+		*/
+		ellipse(0,r/4,r/2,r/2)
+		rotate(flap)
+		ellipse(r/2,0,r,r/2)
+		rotate(flap*-2)
+		ellipse(-r/2,0,r,r/2)
 		pop()
 		pop()		
 	},
@@ -81,7 +91,7 @@ Bird.prototype = {
 		this.acc.add(f)
 	},
 	checkEdge: function(){	
-	/*
+//	/*
 		if(this.loc.x > width){
 			this.loc.x = 0
 		}
@@ -94,13 +104,15 @@ Bird.prototype = {
 		if(this.loc.y < 0){
 			this.loc.y = height
 		}
-	*/	
+//	*/	
+	/*
 		var l = this.loc
 		if(l.x > width*5/5 || l.x < -width/4 || l.y > height*5/4 || l.y < -height/4){
 			var toC = createVector(random(width), random(height))
 			toC.sub(l).normalize().mult(.01)
 			this.applyForce(toC)
 		}
+		*/
 	}
 }
 
@@ -161,7 +173,7 @@ function getPushFromMouse(a){
 		var pushMag = mousePos.copy()
 		pushMag.sub(aLoc)
 		pushMag.normalize()
-		pushMag.div(-d)
+		pushMag.div(-d/10)
 		return pushMag
 	}else{
 		return createVector()
